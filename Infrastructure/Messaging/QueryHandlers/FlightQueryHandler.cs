@@ -11,6 +11,7 @@ namespace FlightApp.Infrastructure.Messaging.QueryHandlers
     {
         private readonly FlightDbContext _dbContext;
         private readonly IFlightRepository _flightRepository;
+
         public FlightQueryHandler(FlightDbContext dbContext, IFlightRepository flightRepository)
         {
             _dbContext = dbContext;
@@ -21,6 +22,7 @@ namespace FlightApp.Infrastructure.Messaging.QueryHandlers
         {
             return await _dbContext.Flights.FindAsync(request.FlightId);
         }
+
         public async Task<List<Flight>> Handle(GetAllFlightQuery request, CancellationToken cancellationToken)
         {
             return await _flightRepository.GetAllAsync();

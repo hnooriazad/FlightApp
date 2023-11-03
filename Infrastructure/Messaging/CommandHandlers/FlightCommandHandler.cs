@@ -12,6 +12,7 @@ namespace FlightApp.Infrastructure.Messaging.CommandHandlers
         private readonly FlightDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IFlightRepository _flightRepository;
+
         public FlightCommandHandler(FlightDbContext dbContext, IMapper mapper, IFlightRepository flightRepository)
         {
             _dbContext = dbContext;
@@ -23,7 +24,6 @@ namespace FlightApp.Infrastructure.Messaging.CommandHandlers
         {
             try
             {
-
                 var newFlights = _mapper.Map<List<Flight>>(request.Flights);
                 await _flightRepository.AddListAsync(newFlights);
                 return Unit.Value;

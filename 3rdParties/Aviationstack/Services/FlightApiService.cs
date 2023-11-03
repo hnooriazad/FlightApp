@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using FlightApp._3rdParties.Aviationstack.Models;
+﻿using FlightApp._3rdParties.Aviationstack.Models;
 using FlightApp._3rdParties.Aviationstack.Models.Base;
-using FlightApp.Application.DTOs;
-using FlightApp.Presentation.Models;
 using FlightApp.Utility;
 using Newtonsoft.Json;
 using RestSharp;
@@ -14,56 +11,28 @@ namespace FlightApp._3rdParties.Aviationstack.Services
         private static readonly string _getAllFlightsUrl = Config.BaseUrl + "flights";
         public static async Task<BaseResponseModel<List<GetAllFlightsResponseModel>>> GetAllFlightsAsync()
         {
-            try
-            {
-
-                RestClient client = new RestClient();
-                GetAllFlightsRequestModel requestModel = new GetAllFlightsRequestModel();
-                string querySringResult = requestModel.CreateQueryStringFromObject();
-                RestRequest request = new RestRequest(_getAllFlightsUrl + querySringResult);
-
-
-
-                RestResponse response = await client.ExecuteAsync(request);
-                if (response != null && response.IsSuccessful && response.Content != null)
-                {
-                    var result = JsonConvert.DeserializeObject<BaseResponseModel<List<GetAllFlightsResponseModel>>>(response.Content);
-
-                    return result;
-                }
-                return await Task.FromResult<BaseResponseModel<List<GetAllFlightsResponseModel>>>(null);
-            }
-            catch (Exception ex)
-            {
-                throw;
-                //handle Exeption
-            }
+            string requestUrl = _getAllFlightsUrl + $"?access_key={Config.AccessKey}";
+            return await SendRequestAsync(requestUrl);
         }
+
         public static async Task<BaseResponseModel<List<GetAllFlightsResponseModel>>> GetFlightsByFilterAsync(GetAllFlightsRequestModel getAllFlightsRequestModel)
         {
-            try
+            string requestUrl = _getAllFlightsUrl + getAllFlightsRequestModel.CreateQueryStringFromObject();
+            return await SendRequestAsync(requestUrl);
+        }
+
+        public static async Task<BaseResponseModel<List<GetAllFlightsResponseModel>>> SendRequestAsync(string requestUrl)
+        {
+            RestClient client = new RestClient();
+            RestRequest request = new RestRequest(requestUrl);
+            RestResponse response = await client.ExecuteAsync(request);
+
+            if (response != null && response.IsSuccessful && response.Content != null)
             {
-
-                RestClient client = new RestClient();
-                //GetAllFlightsRequestModel requestModel = new GetAllFlightsRequestModel();
-                string querySringResult = getAllFlightsRequestModel.CreateQueryStringFromObject();
-                RestRequest request = new RestRequest(_getAllFlightsUrl + querySringResult);
-
-
-                RestResponse response = await client.ExecuteAsync(request);
-                if (response != null && response.IsSuccessful && response.Content != null)
-                {
-                    var result = JsonConvert.DeserializeObject<BaseResponseModel<List<GetAllFlightsResponseModel>>>(response.Content);
-
-                    return result;
-                }
-                return await Task.FromResult<BaseResponseModel<List<GetAllFlightsResponseModel>>>(null);
+                return JsonConvert.DeserializeObject<BaseResponseModel<List<GetAllFlightsResponseModel>>>(response.Content);
             }
-            catch (Exception ex)
-            {
-                throw;
-                //handle Exception
-            }
+
+            return null;
         }
     }
 }

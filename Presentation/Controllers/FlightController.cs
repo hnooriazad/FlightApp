@@ -36,7 +36,7 @@ namespace FlightApp.Presentation.Controllers
                 {
                     Flights = _mapper.Map<List<CreateFlightCommand>>(res.Data)
                 };
-                var a = await _mediator.Send(createFlightListCommand);
+                await _mediator.Send(createFlightListCommand);
                 var query = new GetAllFlightQuery();
                 List<Flight> Flight = await _mediator.Send(query);
 
@@ -54,7 +54,7 @@ namespace FlightApp.Presentation.Controllers
             }
         }
         /// <summary>
-        /// this API use to search by filter
+        /// this API use to search by filter - import after retrieve data from 3rd party
         /// if you want to find flight of airport, fill dep_iata or arr_iata in Inuput model
         /// </summary>
         /// <param name="flightSearchInputModel"></param>
@@ -83,7 +83,7 @@ namespace FlightApp.Presentation.Controllers
                 var FlightDto = _mapper.Map<List<FlightDto>>(Flight);
                 return Ok(FlightDto);
             }
-            catch
+            catch(Exception ex)
             {
                 return UnprocessableEntity();
             }

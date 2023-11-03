@@ -11,7 +11,9 @@ namespace FlightApp.Application
     {
         public MappingProfile()
         {
-            CreateMap<Flight, FlightDto>().ReverseMap();
+            CreateMap<Flight, FlightDto>()
+                .ForMember(dest => dest.FlightId, src => src.MapFrom(ar => ar.Id))
+                .ReverseMap();
             CreateMap<GetAllFlightsResponseModel, CreateFlightCommand>().ReverseMap();
             CreateMap<FlightDetail, FlightDetailsDto>().ReverseMap();
             CreateMap<_3rdParties.Aviationstack.Models.Info, InfoDto>().ReverseMap();

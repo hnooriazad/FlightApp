@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FlightApp.Application.Commands.Airports;
-using FlightApp.Application.Commands.Flights;
 using FlightApp.Domain.Entities;
 using FlightApp.Infrastructure.Data.Context;
 using FlightApp.Infrastructure.Data.Repositories;
@@ -23,10 +22,8 @@ namespace FlightApp.Infrastructure.Messaging.CommandHandlers
 
         public async Task<Unit> Handle(CreateAirportListCommand request, CancellationToken cancellationToken)
         {
-
             try
             {
-
                 var newAirports = _mapper.Map<List<Airport>>(request.Airports);
                 await _airportRepository.AddListAsync(newAirports);
                 return Unit.Value;
